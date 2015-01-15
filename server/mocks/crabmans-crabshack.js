@@ -99,19 +99,22 @@ module.exports = function(app) {
   crabmansCrabshackRouter.post('/payments', function(req, res) {
     var cardNumber = req.body.cardNumber;
     var securityCode = req.body.securityCode;
-    var responseStatus;
+    var tableNumber = req.body.tableNumber;
 
     var cardDeclined = (Math.random() > 0.9) ? true : false;
 
-    if (!cardNumber || !securityCode || cardNumber.length !== 16 || securityCode.length !== 3) {
-      responseStatus = 400;
+    if (!tableNumber) {
+      res.status(404).send({});
+    } else if (!cardNumber || !securityCode || cardNumber.length !== 16 || securityCode.length !== 3) {
+      res.status(400).send({});
     } else if (cardDeclined) {
-      responseStatus = 502;
+      setTimeout(function() {res.status(502).send({});}, 3000);
     } else {
-      responseStatus = 200;
+      memcached.set(tableNumber, [], CACHE_TIME, function(err) {
+        setTimeout(function() {res.status(200).send({});}, 3000);
+      });
     }
 
-    setTimeout(function() {res.status(responseStatus).send({});}, 3000);
   });
 
   var _renderResponse = function(order) {
