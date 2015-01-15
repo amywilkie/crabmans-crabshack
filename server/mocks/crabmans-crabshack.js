@@ -34,7 +34,7 @@ module.exports = function(app) {
   for (var k in menu) { menuItems.push(k); }
 
   for (var i=1; i <= NUMBER_OF_TABLES; i++) {
-    memcached.set(i, {orderItems : [ ], total: 0}, CACHE_TIME, function(err) {
+    memcached.set(i, [ ], CACHE_TIME, function(err) {
       if(err) {
         console.log('error setting up table', err);
       }
@@ -58,7 +58,7 @@ module.exports = function(app) {
         if (err) {
           console.log(err);
         } else {
-          var existingOrderItems = data.orderItems || [];
+          var existingOrderItems = data || [];
           var updatedOrderItems = existingOrderItems;
 
           for (var i = 0; i < incomingOrderItems.length; i++) {
@@ -69,12 +69,12 @@ module.exports = function(app) {
             updatedOrderItems.push({id: incomingOrderItems[i], state: 0 });
           }
 
-          memcached.set(tableNumber, { orderItems: updatedOrderItems, total: 0}, CACHE_TIME,  function(err) {
+          memcached.set(tableNumber, updatedOrderItems, CACHE_TIME,  function(err) {
             if(err) {
               console.log(err);
               res.status(500).send({});
             } else {
-              res.status(201).send(_makeFoodStatesHumanReadable(updatedOrderItems));
+              res.status(201).send(_renderResponse(updatedOrderItems));
             }
           });
         }
@@ -88,7 +88,8 @@ module.exports = function(app) {
 
     if (tableNumber && tableNumber > 0 && tableNumber <= NUMBER_OF_TABLES) {
       memcached.get(req.params.tableNumber, function(err, data) {
-        setTimeout(function() { res.status(200).send(data); }, 1000);
+        var response = _renderResponse(data);
+        setTimeout(function() { res.status(200).send(response); }, 1000);
       });
     } else {
       res.status(404).send({});
@@ -113,12 +114,24 @@ module.exports = function(app) {
     setTimeout(function() {res.status(responseStatus).send({});}, 3000);
   });
 
-  var _makeFoodStatesHumanReadable = function(order) {
+  var _renderResponse = function(order) {
     var humanReadableOrderItems = [];
     for (var i = 0; i < order.length; i++) {
       humanReadableOrderItems.push({id: order[i].id, state: FOOD_STATES[order[i].state]});
     }
-    return {orderItems: humanReadableOrderItems, total: 0};
+    return {orderItems: humanReadableOrderItems, total: _calculateTotal(order)};
+  };
+
+  var _calculateTotal = function(order) {
+    if (order.length === 0) {
+      return 0;
+    }
+    var total = 0;
+    for (item in order) {
+      var price = parseFloat(menu[order[item].id].price);
+      total += price;
+    }
+    return total;
   };
 
   app.use('/api', crabmansCrabshackRouter);
