@@ -7,39 +7,34 @@ module.exports = function(app) {
   var CACHE_TIME = 3 * 60 * 60;
   var FOOD_STATES = ['order received', 'preparing', 'chef spitting in food', 'cooking', 'delivered'];
 
-  var menu = [
-      {
-        id: 1,
-        name: 'Prawn Cocktail',
+  var menu = {
+      "Prawn Cocktail": {
         type: 'starter',
         description: 'A modern starter for the modern man',
         price: '3.99'
       },
-      {
-        id: 2,
-        name: 'Claw of Crabulon',
+      "Claw of Crabulon": {
         type: 'main',
         description: 'Keep calm and Crabulon',
         price: '12.85'
       },
-      {
-        id: 3,
-        name: 'Crabman Sundae',
+      "Crabman Sundae": {
         type: 'dessert',
         description: 'Ground up crabs with animal fat ice cream. A variety of sauces available.',
         price: '4.90'
       },
-      {
-        id: 4,
-        name: 'Alcoholic milkshake',
+      "Alcoholic milkshake": {
         type: 'beverage',
         description: 'The best alcoholic milkshake you will taste this side of the Atlantic.',
         price: '3.99'
       }
-    ];
+    };
+
+  var menuItems = [];
+  for (var k in menu) { menuItems.push(k); }
 
   for (var i=1; i <= NUMBER_OF_TABLES; i++) {
-    memcached.set(i, {orderItems : [ {id: 3, state: 4}], total: 0}, CACHE_TIME, function(err) {
+    memcached.set(i, {orderItems : [ ], total: 0}, CACHE_TIME, function(err) {
       if(err) {
         console.log('error setting up table', err);
       }
@@ -67,6 +62,10 @@ module.exports = function(app) {
           var updatedOrderItems = existingOrderItems;
 
           for (var i = 0; i < incomingOrderItems.length; i++) {
+            if (menuItems.indexOf(incomingOrderItems[i]) < 0) {
+              res.status(400).send({});
+              return;
+            }
             updatedOrderItems.push({id: incomingOrderItems[i], state: 0 });
           }
 
