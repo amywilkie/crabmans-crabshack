@@ -8,22 +8,47 @@ module.exports = function(app) {
   var FOOD_STATES = ['order received', 'preparing', 'chef spitting in food', 'cooking', 'delivered'];
 
   var menu = {
-      "Prawn Cocktail": {
+      'Prawn Cocktail': {
         type: 'starter',
         description: 'A modern starter for the modern man',
         price: '3.99'
       },
-      "Claw of Crabulon": {
+      'Crab Platter': {
+        type: 'starter',
+        description: 'Truly crabby platter',
+        price: '8.00'
+      },
+      'Claw of Crabulon': {
         type: 'main',
         description: 'Keep calm and Crabulon',
         price: '12.85'
       },
-      "Crabman Sundae": {
+      'Crab and Chips': {
+        type: 'main',
+        description: 'A crabby take on a classic',
+        price: '10.49'
+      },
+      'Vegetarian Crab': {
+        type: 'main',
+        description: 'Crab meat made from the best nautical tofu',
+        price: '11.99'
+      },
+      'Crabman Sundae': {
         type: 'dessert',
         description: 'Ground up crabs with animal fat ice cream. A variety of sauces available.',
         price: '4.90'
       },
-      "Alcoholic milkshake": {
+      'Craw Brulee': {
+        type: 'dessert',
+        description: 'Brulee made with the finest claw in Brentford',
+        price: '3.80'
+      },
+      'Crabba Cola': {
+        type: 'beverage',
+        description: 'Coca-cola but with our unique distinct crabby flavour',
+        price: '1.80'
+      },
+      'Alcoholic milkshake': {
         type: 'beverage',
         description: 'The best alcoholic milkshake you will taste this side of the Atlantic.',
         price: '3.99'
