@@ -1,0 +1,101 @@
+Wenguins Pairing Test
+
+You are required to create a single-page javascript app for the swanky new restaurant Crabman's Crabshack. Each table at Crabman's Crabshack has a tablet device running Chrome, into which customers can order their food and bevarages. The app needs to be able to display the menu and send an order and it should keep the customer updated with the status of their order. Please see Crabman's Crabshack's API below:
+
+GET /api/menu-items
+[
+  {
+    id: 1,
+    name: 'Prawn Cocktail',
+    type: 'starter',
+    description: 'A modern starter for the modern man',
+    price: '3.99'
+  },
+  {
+    id: 2,
+    name: 'Claw of Crabulon',
+    type: 'main',
+    description: 'Keep calm and Crabulon',
+    price: '12.85'
+  },
+  {
+    id: 3,
+    name: 'Crabman Sundae',
+    type: 'dessert',
+    description: 'Ground up crabs with animal fat ice cream. A variety of sauces available.',
+    price: '4.90'
+  },
+  {
+    id: 4,
+    name: 'Alcoholic milkshake',
+    type: 'beverage',
+    description: 'The best alcoholic milkshake you will taste this side of the Atlantic.',
+    price: '3.99'
+  }
+]
+
+Possible Responses:
+200: OK
+
+
+
+POST /api/orders
+body:
+{
+  tableNumber: 1,
+  orderItems: [
+    {
+      id: 3,
+      quantity: 1
+    },
+    {
+      id: 4,
+      quantity: 10
+    }
+  ]
+}
+
+Possible Responses
+201: Order created
+404: Table not found
+400: Bad request
+
+
+
+GET /api/table/1
+{
+  orderItems: [
+    {
+      id: 3,
+      quantity: 1
+      status: 'cooking'
+    },
+    {
+      id: 4,
+      quantity: 10
+      status: 'preparing'
+    }
+  ],
+  total: '44.80'
+}
+
+Possible Responses
+200: OK
+404: Table not found
+
+
+
+POST /api/payments
+
+body:
+
+{
+  table: 1,
+  cardNumber: 4751300036472337,
+  securityCode: 213,
+  expiryDate: '03/16'
+}
+
+Possible Response:
+200: Successful payment
+400: Unsuccessful payment
