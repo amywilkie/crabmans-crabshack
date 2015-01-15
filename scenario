@@ -67,13 +67,15 @@ GET /api/table/1
   orderItems: [
     {
       id: 3,
-      quantity: 1
       status: 'cooking'
     },
     {
       id: 4,
-      quantity: 10
       status: 'preparing'
+    },
+    {
+      id: 4,
+      status: 'delivered'
     }
   ],
   total: '44.80'
@@ -98,4 +100,5 @@ body:
 
 Possible Response:
 200: Successful payment
-400: Unsuccessful payment
+400: Card details wrong format
+502: Card declined / bank problem

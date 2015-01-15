@@ -1,10 +1,13 @@
 module.exports = function(app) {
+  var Memcached = require('memcached');
+  var memcached = new Memcached('127.0.0.1:11211');
   var express = require('express');
   var crabmansCrabshackRouter = express.Router();
-  var NUMBER_OF_TABLES=6;
+  var NUMBER_OF_TABLES = 6;
+  var CACHE_TIME = 3 * 60 * 60;
+  var FOOD_STATES = ['order received', 'preparing', 'chef spitting in food', 'cooking', 'delivered'];
 
-  crabmansCrabshackRouter.get('/menu', function(req, res) {
-    var response = [
+  var menu = [
       {
         id: 1,
         name: 'Prawn Cocktail',
@@ -34,26 +37,64 @@ module.exports = function(app) {
         price: '3.99'
       }
     ];
-    var responseStatus = 200;
 
-    setTimeout(function() { res.status(responseStatus).send(response); }, 1000);
+  for (var i=1; i <= NUMBER_OF_TABLES; i++) {
+    memcached.set(i, {orderItems : [ {id: 3, state: 4}], total: 0}, CACHE_TIME, function(err) {
+      if(err) {
+        console.log('error setting up table', err);
+      }
+    });
+  }
 
+  crabmansCrabshackRouter.get('/menu', function(req, res) {
+    setTimeout(function() { res.status(200).send(menu); }, 1000);
   });
 
   crabmansCrabshackRouter.post('/orders', function(req, res) {
     var tableNumber = req.body.tableNumber;
-    var responseStatus;
+    var incomingOrderItems = req.body.orderItems;
 
-    if (tableNumber && tableNumber > 0 && tableNumber <= NUMBER_OF_TABLES) {
-      responseStatus = 201;
+    if (!tableNumber || !incomingOrderItems || !Array.isArray(incomingOrderItems ) ||incomingOrderItems .length === 0) {
+      res.status(400).send({});
+    } else if (tableNumber < 1 || tableNumber > NUMBER_OF_TABLES) {
+      res.status(404).send({});
     } else {
-      responseStatus = 404;
-    }
+      memcached.get(tableNumber, function(err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          var existingOrderItems = data.orderItems || [];
+          var updatedOrderItems = existingOrderItems;
 
-    setTimeout(function() {res.status(responseStatus ).send({});}, 1000);
+          for (var i = 0; i < incomingOrderItems.length; i++) {
+            updatedOrderItems.push({id: incomingOrderItems[i], state: 0 });
+          }
+
+          memcached.set(tableNumber, { orderItems: updatedOrderItems, total: 0}, CACHE_TIME,  function(err) {
+            if(err) {
+              console.log(err);
+              res.status(500).send({});
+            } else {
+              res.status(201).send(_makeFoodStatesHumanReadable(updatedOrderItems));
+            }
+          });
+        }
+      });
+
+    }
   });
 
-  app.use('/api', crabmansCrabshackRouter);
+  crabmansCrabshackRouter.get('/table/:tableNumber', function(req, res) {
+    var tableNumber = req.params.tableNumber;
+
+    if (tableNumber && tableNumber > 0 && tableNumber <= NUMBER_OF_TABLES) {
+      memcached.get(req.params.tableNumber, function(err, data) {
+        setTimeout(function() { res.status(200).send(data); }, 1000);
+      });
+    } else {
+      res.status(404).send({});
+    }
+  });
 
   crabmansCrabshackRouter.post('/payments', function(req, res) {
     var cardNumber = req.body.cardNumber;
@@ -72,5 +113,15 @@ module.exports = function(app) {
 
     setTimeout(function() {res.status(responseStatus).send({});}, 3000);
   });
+
+  var _makeFoodStatesHumanReadable = function(order) {
+    var humanReadableOrderItems = [];
+    for (var i = 0; i < order.length; i++) {
+      humanReadableOrderItems.push({id: order[i].id, state: FOOD_STATES[order[i].state]});
+    }
+    return {orderItems: humanReadableOrderItems, total: 0};
+  };
+
+  app.use('/api', crabmansCrabshackRouter);
 };
 
