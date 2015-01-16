@@ -43,6 +43,11 @@ module.exports = function(app) {
         description: 'Brulee made with the finest claw in Brentford',
         price: '3.80'
       },
+      'Crabwerries & Seawater': {
+        type: 'dessert',
+        description: 'Organically grown crawberries with distilled sea water imported from the Pacific',
+        price: '4.99'
+      },
       'Crabba Cola': {
         type: 'beverage',
         description: 'Coca-cola but with our unique distinct crabby flavour',
@@ -56,6 +61,7 @@ module.exports = function(app) {
     };
 
   var menuItems = [];
+
   for (var k in menu) { menuItems.push(k); }
 
   for (var i=1; i <= NUMBER_OF_TABLES; i++) {
@@ -71,23 +77,6 @@ module.exports = function(app) {
       _randomlyProgressFoodOrdersForTable(i);
     }
   }, 10000);
-
-  var _randomlyProgressFoodOrdersForTable = function(table) {
-    memcached.get(table, function(err, data) {
-      for (item in data) {
-        var currentState = data[item].state;
-        if (currentState < (FOOD_STATES.length - 1) && Math.random() > 0.5) {
-          data[item].state++;
-          console.log('Table ' + table + ' order ' + data[item].id + ' is now in state ' + data[item].state);
-        }
-      }
-      memcached.set(table, data, CACHE_TIME, function(err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    });
-  }
 
   crabmansCrabshackRouter.get('/menu', function(req, res) {
     setTimeout(function() { res.status(200).send(menu); }, 1000);
@@ -184,6 +173,23 @@ module.exports = function(app) {
     }
     return total;
   };
+
+  var _randomlyProgressFoodOrdersForTable = function(table) {
+    memcached.get(table, function(err, data) {
+      for (item in data) {
+        var currentState = data[item].state;
+        if (currentState < (FOOD_STATES.length - 1) && Math.random() > 0.5) {
+          data[item].state++;
+          console.log('Table ' + table + ' order ' + data[item].id + ' is now in state ' + data[item].state);
+        }
+      }
+      memcached.set(table, data, CACHE_TIME, function(err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    });
+  }
 
   app.use('/api', crabmansCrabshackRouter);
 };
