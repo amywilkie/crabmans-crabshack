@@ -11,6 +11,7 @@ var bodyParser = require('body-parser');
 var globSync   = require('glob').sync;
 var mocks      = globSync('./mocks/**/*.js', { cwd: __dirname }).map(require);
 var proxies    = globSync('./proxies/**/*.js', { cwd: __dirname }).map(require);
+var store      = {};
 
 module.exports = function(app) {
   app.use(bodyParser.json());
@@ -18,7 +19,7 @@ module.exports = function(app) {
     extended: true
   }));
 
-  mocks.forEach(function(route) { route(app)});
+  mocks.forEach(function(route) { route(app, store)});
 
   // proxy expects a stream, but express will have turned
   // the request stream into an object because bodyParser
