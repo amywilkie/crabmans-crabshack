@@ -1,4 +1,3 @@
-var isValidTableNumber = require('../utils/is-valid-table-number');
 var renderResponse = require('../utils/render-response');
 
 module.exports = function(app, store) {
@@ -7,14 +6,15 @@ module.exports = function(app, store) {
 
   tablesRouter.get('/:tableNumber', function(req, res) {
     var tableNumber = req.params.tableNumber;
+    var table = store.getTable(tableNumber);
 
-      if (!isValidTableNumber(tableNumber)) {
-        res.status(404).send({});
-      }
+    if (!table) {
+      res.status(404).send({});
+    }
 
-      var currentOrderItems = store[tableNumber];
-      var response = renderResponse(currentOrderItems);
-      setTimeout(function() { res.status(200).send(response); }, 1000);
+    var currentOrderItems = table;
+    var response = renderResponse(currentOrderItems);
+    setTimeout(function() { res.status(200).send(response); }, 1000);
   });
 
   app.use('/api/tables', tablesRouter);

@@ -6,10 +6,10 @@ var _calculateTotal = function(order) {
   }
   var total = 0;
 
-  for (item in order) {
-    var price = parseFloat(menu[order[item].id].price);
+  order.forEach(function(item){
+    var price = parseFloat(menu[item.id].price);
     total += price;
-  }
+  });
   return total.toFixed(2).toString();
 };
 

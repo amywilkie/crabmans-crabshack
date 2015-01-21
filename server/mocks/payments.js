@@ -5,8 +5,6 @@ function _isValidCard(cardNumber, securityCode) {
   return true;
 }
 
-var isValidTableNumber = require('../utils/is-valid-table-number');
-
 module.exports = function(app, store) {
   var express = require('express');
   var paymentsRouter = express.Router();
@@ -17,12 +15,12 @@ module.exports = function(app, store) {
     var tableNumber = req.body.tableNumber;
     var cardDeclined = (Math.random() > 0.9) ? true : false;
 
-    if (!isValidTableNumber(tableNumber) || !_isValidCard(cardNumber, securityCode)) {
+    if (!store.getTable(tableNumber) || !_isValidCard(cardNumber, securityCode)) {
       res.status(400).send({});
     } else if (cardDeclined) {
       setTimeout(function() {res.status(502).send({});}, 3000);
     } else {
-      store[tableNumber] = [];
+      store.resetTable(tableNumber);
       setTimeout(function() {res.status(200).send({});}, 3000);
     }
   });

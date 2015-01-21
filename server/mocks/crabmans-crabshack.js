@@ -2,10 +2,7 @@ module.exports = function(app, store) {
   var express = require('express');
   var crabmansCrabshackRouter = express.Router();
   var NUMBER_OF_TABLES = 6;
-  var menu = require('../fixtures/menu');
   var FOOD_STATES = require('../fixtures/food-states');
-
-  clearStore();
 
   var chaosFoodMonkey = setInterval(function() {
     for (var i = 1; i <= NUMBER_OF_TABLES; i++) {
@@ -25,12 +22,6 @@ module.exports = function(app, store) {
     }
 
     store[table] = data;
-  }
-
-  function clearStore() {
-    for (var i=1; i <= NUMBER_OF_TABLES; i++) {
-      store[i] = [];
-    }
   }
 
   app.use('/api', crabmansCrabshackRouter);

@@ -1,12 +1,11 @@
 var renderResponse = require('../utils/render-response');
-var isValidTableNumber = require('../utils/is-valid-table-number');
 var menu = require('../fixtures/menu');
 
-function isValidRequest(data) {
+function isValidRequest(data, store) {
   var tableNumber = data.tableNumber;
   var incomingOrderItems = data.orderItems;
 
-  if (!isValidTableNumber(tableNumber)) {
+  if (!store.getTable(tableNumber)) {
     return false;
   }
 
@@ -33,17 +32,14 @@ module.exports = function(app, store) {
     var tableNumber = data.tableNumber;
     var incomingOrderItems = data.orderItems;
 
-    if (!isValidRequest(data)) {
+    if (!isValidRequest(data, store)) {
       res.status(400).send({});
     } else {
-      var currentItems = store[tableNumber];
+      incomingOrderItems.forEach(function(item) {
+        store.addItemToTable(tableNumber, {id: item, state: 0});
+      });
 
-      var allItems = incomingOrderItems.reduce(function(previous, current) {
-        previous.push({id: current, state: 0 });
-        return previous;
-      }, currentItems);
-
-      setTimeout(function() { res.status(201).send(renderResponse(allItems)); }, 2000);
+      setTimeout(function() { res.status(201).send(renderResponse(store.getTable(tableNumber))); }, 2000);
     }
   });
 
