@@ -6,9 +6,8 @@ module.exports = function(app) {
   var FOOD_STATES = ['order received', 'preparing', 'chef spitting in food', 'cooking', 'delivered'];
   var store = {};
 
-  for (var i=1; i <= NUMBER_OF_TABLES; i++) {
-    _resetTable(i);
-  }
+  clearStore();
+
 
   var chaosFoodMonkey = setInterval(function() {
     for (var i = 1; i <= NUMBER_OF_TABLES; i++) {
@@ -66,6 +65,11 @@ module.exports = function(app) {
       setTimeout(function() {res.status(200).send({});}, 3000);
     }
 
+  });
+
+  crabmansCrabshackRouter.get('/reset', function(req, res) {
+    clearStore();
+    res.status(200).send({});
   });
 
   var _renderResponse = function(order) {
@@ -142,6 +146,13 @@ module.exports = function(app) {
 
     return true;
   }
+
+  function clearStore() {
+    for (var i=1; i <= NUMBER_OF_TABLES; i++) {
+      _resetTable(i);
+    }
+  }
+
   app.use('/api', crabmansCrabshackRouter);
 };
 
