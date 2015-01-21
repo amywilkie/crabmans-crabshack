@@ -1,4 +1,14 @@
 var renderResponse = require('../utils/render-response');
+var FOOD_STATES = require('../fixtures/food-states');
+
+function progressOrderState(table) {
+  table.forEach(function(item) {
+    var currentState = item.state;
+    if (currentState < (FOOD_STATES.length - 1) && Math.random() > 0.5) {
+      item.state++;
+    }
+  });
+}
 
 module.exports = function(app, store) {
   var express = require('express');
@@ -12,8 +22,8 @@ module.exports = function(app, store) {
       res.status(404).send({});
     }
 
-    var currentOrderItems = table;
-    var response = renderResponse(currentOrderItems);
+    var response = renderResponse(table);
+    progressOrderState(table);
     setTimeout(function() { res.status(200).send(response); }, 1000);
   });
 
