@@ -28,4 +28,15 @@
 {{/each}}
 </ul>
 
+<h1>Basket</h1>
+<ul>
+{{#each item in basket}}
+  <li>{{item.name}} x {{item.count}}</li>
+{{/each}}
+</ul>
+<h2>Sub total</h2>
+<h3>£{{basketTotal}}</h3>
+
+<a href="#" {{action 'sendOrder'}}>Send Order</a>
+
 {{outlet}}
