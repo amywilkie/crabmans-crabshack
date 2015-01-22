@@ -1,0 +1,8 @@
+<ul>
+{{#each item in items}}
+  <li>{{item.id}}: {{item.state}}</li>
+{{else}}
+  <li>No items ordered</li>
+{{/each}}
+</ul>
+{{yield}}

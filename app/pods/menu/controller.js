@@ -1,5 +1,7 @@
 import Em from 'ember';
 
+var Promise = Em.RSVP.Promise;
+
 export default Em.ObjectController.extend({
   itemsInBasket: Em.A([]),
 
@@ -69,6 +71,9 @@ export default Em.ObjectController.extend({
     return this.get('menuItems').filterBy('type', 'beverage');
   }),
 
+  tableNumber: Em.computed(function() {
+    return this.get('cookie').getCookie('tableNumber');
+  }),
 
   actions: {
     addItem: function(item) {
@@ -89,14 +94,18 @@ export default Em.ObjectController.extend({
         tableNumber: tableNumber,
         orderItems: orderItems
       };
+
       Em.$.ajax({
         dataType: 'json',
         type: 'post',
         url: 'api/orders',
         data: body,
         success: function(data) {
+          Em.run(function() {
+            this.set('itemsInBasket', Em.A([]));
+          }.bind(this));
           console.log(data);
-        }
+        }.bind(this)
       });
       console.log(body);
     }
