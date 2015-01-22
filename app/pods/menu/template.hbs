@@ -1,0 +1,31 @@
+<h1>The Menu</h1>
+
+<h2>Starters</h2>
+<ul>
+{{#each item in starters}}
+  <li><a href="#" {{action 'addItem' item}}>{{item.name}}</a>, {{item.description}}, {{item.price}}</li>
+{{/each}}
+</ul>
+
+<h2>Mains</h2>
+<ul>
+{{#each item in mains}}
+  <li><a href="#" {{action 'addItem' item}}>{{item.name}}</a>, {{item.description}}, {{item.price}}</li>
+{{/each}}
+</ul>
+
+<h2>Desserts</h2>
+<ul>
+{{#each item in desserts}}
+  <li><a href="#" {{action 'addItem' item}}>{{item.name}}</a>, {{item.description}}, {{item.price}}</li>
+{{/each}}
+</ul>
+
+<h2>Beverages</h2>
+<ul>
+{{#each item in beverages}}
+  <li><a href="#" {{action 'addItem' item}}>{{item.name}}</a>, {{item.description}}, {{item.price}}</li>
+{{/each}}
+</ul>
+
+{{outlet}}
