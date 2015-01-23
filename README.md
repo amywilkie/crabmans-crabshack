@@ -16,7 +16,7 @@ Imhotep, the product owner, will be present before and during the development of
 
 #### Resource URL
 
-https://crabmans-crabshack-api.herokuapp.com/api/menu
+http://crabmans-crabshack-api.herokuapp.com/api/menu
 
 #### Example Result
 
@@ -49,7 +49,7 @@ https://crabmans-crabshack-api.herokuapp.com/api/menu
 
 #### Resource URL
 
-https://crabmans-crabshack-api.herokuapp.com/api/orders
+http://crabmans-crabshack-api.herokuapp.com/api/orders
 
 #### Example Request
 
@@ -86,7 +86,7 @@ https://crabmans-crabshack-api.herokuapp.com/api/orders
 
 #### Resource URL
 
-https://crabmans-crabshack-api.herokuapp.com/api/tables/:table-number
+http://crabmans-crabshack-api.herokuapp.com/api/tables/:table-number
 
 #### Example Response
 
@@ -114,7 +114,7 @@ https://crabmans-crabshack-api.herokuapp.com/api/tables/:table-number
 
 #### Resource URL
 
-https://crabmans-crabshack-api.herokuapp.com/api/payments
+http://crabmans-crabshack-api.herokuapp.com/api/payments
 
 #### Example Request
 
