@@ -1,53 +1,117 @@
-# Pairing-test
+# Crabman's Crabshack API
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+## Endpoints
 
-## Prerequisites
+### GET /menu
 
-You will need the following things properly installed on your computer.
+#### Resource URL
 
-* [Git](http://git-scm.com/)
-* [Node.js](http://nodejs.org/) (with NPM)
-* [Bower](http://bower.io/)
-* [Ember CLI](http://www.ember-cli.com/)
-* [PhantomJS](http://phantomjs.org/)
+https://crabmans-crabshack-api.herokuapp.com/api/menu
 
-## Installation
+#### Example Result
 
-* `git clone <repository-url>` this repository
-* change into the new directory
-* `npm install`
-* `bower install`
+```javascript
+{
+  'Prawn Cocktail': {
+    'type': 'starter',
+    'description': 'A modern starter for the modern man',
+    'price': '3.99'
+  },
+  'Claw of Crabulon': {
+    'type': 'main',
+    'description': 'Keep calm and Crabulon',
+    'price': '12.85'
+  },
+  'Crabman Sundae': {
+    'type': 'dessert',
+    'description': 'Ground up crabs with animal fat ice cream. A variety of sauces available.',
+    'price': '4.90'
+  },
+  'Crabba Cola': {
+    'type': 'beverage',
+    'description': 'Coca-cola but with our unique distinct crabby flavour',
+    'price': '1.80'
+  }
+}
+```
 
-## Running / Development
+### POST /orders
 
-* `ember server`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
+#### Resource URL
 
-### Code Generators
+https://crabmans-crabshack-api.herokuapp.com/api/orders
 
-Make use of the many generators for code, try `ember help generate` for more details
+#### Example Request
 
-### Running Tests
+```javascript
+{
+  'tableNumber': 1,
+  'orderItems': ['Claw of Crabulon', 'Crabba Cola']
+}
+```
 
-* `ember test`
-* `ember test --server`
+#### Example Response
 
-### Building
+```javascript
+{
+  'orderItems': [
+    {
+      'id': 'Claw of Crabulon',
+      'state': 'cooking'
+    },
+    {
+      'id': 'Prawn Sundae',
+      'state': 'ordered'
+    },
+    {
+      'id': 'Claw Salad'
+      'state': 'deleivered'
+    }
+  ],
+  'total': '23.43'
+}
+```
 
-* `ember build` (development)
-* `ember build --environment production` (production)
+### GET /tables/:table-number
 
-### Deploying
+#### Resource URL
 
-Specify what it takes to deploy your app.
+https://crabmans-crabshack-api.herokuapp.com/api/tables/:table-number
 
-## Further Reading / Useful Links
+#### Example Response
 
-* [ember.js](http://emberjs.com/)
-* [ember-cli](http://www.ember-cli.com/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+```javascript
+{
+  'orderItems': [
+    {
+      'id': 'Claw of Crabulon',
+      'state': 'cooking'
+    },
+    {
+      'id': 'Prawn Sundae',
+      'state': 'ordered'
+    },
+    {
+      'id': 'Claw Salad'
+      'state': 'deleivered'
+    }
+  ],
+  'total': '23.43'
+}
+```
 
+### POST /payments
+
+#### Resource URL
+
+https://crabmans-crabshack-api.herokuapp.com/api/payments
+
+#### Example Request
+
+```javascript
+{
+  'cardNumber': '1234567890',
+  'securityCode': '4433',
+  'tableNumber': 1
+}
+```
