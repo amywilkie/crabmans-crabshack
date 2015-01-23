@@ -6,7 +6,7 @@
 
 #### Resource URL
 
-https://crabmans-crabshack-api.herokuapp.com/api/menu
+http://crabmans-crabshack-api.herokuapp.com/api/menu
 
 #### Example Result
 
