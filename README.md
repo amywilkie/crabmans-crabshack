@@ -39,7 +39,7 @@ http://crabmans-crabshack-api.herokuapp.com/api/menu
 
 #### Resource URL
 
-https://crabmans-crabshack-api.herokuapp.com/api/orders
+http://crabmans-crabshack-api.herokuapp.com/api/orders
 
 #### Example Request
 
@@ -76,7 +76,7 @@ https://crabmans-crabshack-api.herokuapp.com/api/orders
 
 #### Resource URL
 
-https://crabmans-crabshack-api.herokuapp.com/api/tables/:table-number
+http://crabmans-crabshack-api.herokuapp.com/api/tables/:table-number
 
 #### Example Response
 
@@ -104,7 +104,7 @@ https://crabmans-crabshack-api.herokuapp.com/api/tables/:table-number
 
 #### Resource URL
 
-https://crabmans-crabshack-api.herokuapp.com/api/payments
+http://crabmans-crabshack-api.herokuapp.com/api/payments
 
 #### Example Request
 
